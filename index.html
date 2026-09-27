@@ -1,82 +1,14 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#070707">
-<meta name="description" content="Momo — a private catalogue of trading strategies and indicators across MQL5, MQL4, Pine Script, Python and Rust.">
-<title>Momo — Trading Systems Archive</title>
-<style>
-:root{--bg:#070707;--panel:#0d0d0d;--panel2:#111;--line:#242424;--text:#eee;--muted:#8c8c8c;--red:#b40018;--red2:#e01932;--gold:#b79b61;--max:1440px}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 80% 0%,rgba(180,0,24,.12),transparent 28%),var(--bg);color:var(--text);font:14px/1.6 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:48px 48px}
-a{color:inherit}.wrap{max-width:var(--max);margin:auto;padding:0 28px}
-header{position:sticky;top:0;z-index:20;background:rgba(7,7,7,.82);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08)}
-.nav{height:70px;display:flex;align-items:center;justify-content:space-between}.brand{font-weight:900;letter-spacing:.22em;font-size:18px}.brand i{display:inline-block;width:7px;height:7px;background:var(--red2);margin-left:5px;box-shadow:0 0 18px var(--red2)}nav{display:flex;gap:24px;color:#aaa;font-size:12px;text-transform:uppercase;letter-spacing:.12em}nav a{text-decoration:none}nav a:hover{color:white}
-.hero{min-height:650px;display:grid;align-items:center;position:relative;border-bottom:1px solid var(--line);overflow:hidden}.hero:after{content:"MOMO";position:absolute;right:-30px;bottom:-110px;font-size:clamp(150px,25vw,380px);font-weight:900;letter-spacing:-.08em;color:rgba(255,255,255,.025);pointer-events:none}
-.eyebrow{color:var(--red2);text-transform:uppercase;letter-spacing:.32em;font-size:10px;font-weight:800}.hero h1{font-size:clamp(70px,12vw,170px);line-height:.8;letter-spacing:-.09em;margin:22px 0 30px;max-width:900px}.hero p{max-width:650px;color:#a3a3a3;font-size:16px}.seal{position:absolute;right:7%;top:28%;width:180px;height:180px;border:1px solid #333;border-radius:50%;display:grid;place-items:center;color:var(--gold);font-size:10px;letter-spacing:.28em;text-transform:uppercase;transform:rotate(-12deg)}.seal:before{content:"";position:absolute;inset:13px;border:1px solid #333;border-radius:50%}.seal span{z-index:1}
-.controls{padding:28px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1.5fr repeat(3,1fr);gap:10px}.control{background:#0b0b0b;border:1px solid var(--line);padding:13px 15px;color:#aaa;outline:none}.control:focus{border-color:#555}.count{display:flex;align-items:center;justify-content:flex-end;color:#777;font-size:11px;text-transform:uppercase;letter-spacing:.16em}
-.catalogue{padding:55px 0 100px}.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:25px}.section-head h2{font-size:32px;letter-spacing:-.04em;margin:0}.section-head p{color:#777;margin:0}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
-.card{background:var(--panel);min-height:330px;padding:24px;position:relative;transition:.35s ease;cursor:pointer}.card:hover{background:#121212;transform:translateY(-3px);z-index:2;box-shadow:0 20px 45px rgba(0,0,0,.35)}.card:after{content:"";position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--red2);transition:.35s}.card:hover:after{width:100%}
-.tag{display:inline-block;border:1px solid #333;padding:4px 8px;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#aaa}.tag.red{border-color:#5d111d;color:#f06a7a}.num{float:right;color:#444;font:12px ui-monospace,monospace}.card h3{font-size:22px;line-height:1.05;letter-spacing:-.03em;margin:32px 0 12px}.card p{color:#888;min-height:74px;margin:0 0 18px}.meta{display:flex;flex-wrap:wrap;gap:7px}.pill{background:#151515;border:1px solid #262626;padding:5px 8px;font:10px ui-monospace,monospace;color:#aaa}.card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:25px;padding-top:15px;border-top:1px solid #222}.price{color:var(--gold);font-family:ui-monospace,monospace}.status{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#666}
-.drawer{position:fixed;inset:0;z-index:50;display:none;background:rgba(0,0,0,.7);backdrop-filter:blur(8px)}.drawer.open{display:block}.sheet{position:absolute;right:0;top:0;height:100%;width:min(620px,100%);background:#0b0b0b;border-left:1px solid #333;padding:35px;overflow:auto;animation:slide .3s ease}@keyframes slide{from{transform:translateX(100%)}to{transform:none}}.close{position:absolute;right:25px;top:20px;background:none;border:0;color:#aaa;font-size:24px;cursor:pointer}.sheet h2{font-size:42px;line-height:.95;letter-spacing:-.06em;margin:55px 0 14px}.rule{height:1px;background:#292929;margin:25px 0}.detail{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#292929;border:1px solid #292929}.detail div{background:#111;padding:14px}.detail b{display:block;color:#555;font-size:9px;text-transform:uppercase;letter-spacing:.16em;margin-bottom:4px}.detail span{font:12px ui-monospace,monospace;color:#ccc}.notice{border-left:2px solid var(--red);padding:12px 15px;background:#12090b;color:#999;font-size:12px}
-footer{border-top:1px solid var(--line);padding:35px 0 55px;color:#666}.footer{display:flex;justify-content:space-between;gap:30px}.footer strong{color:#aaa}.small{font-size:11px}
-@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.controls{grid-template-columns:1fr 1fr}.count{justify-content:flex-start}.seal{display:none}}
-@media(max-width:620px){.wrap{padding:0 17px}nav{display:none}.hero{min-height:570px}.hero h1{font-size:78px}.grid{grid-template-columns:1fr}.controls{grid-template-columns:1fr}.section-head{display:block}.section-head p{margin-top:7px}.sheet{padding:25px}.detail{grid-template-columns:1fr}.footer{display:block}}
-</style>
-</head>
-<body>
-<header><div class="wrap nav"><div class="brand">MOMO<i></i></div><nav><a href="#catalogue">Archive</a><a href="#catalogue">Strategies</a><a href="#catalogue">Indicators</a></nav></div></header>
-<main>
-<section class="hero"><div class="wrap"><div class="eyebrow">Private Trading Systems Archive · 2026</div><h1>BUILD.<br>TEST.<br>DEPLOY.</h1><p>Momo is the catalogue for systematic trading work across MQL5, MQL4, Pine Script, Python and Rust. Twenty-two core systems. Five implementation languages. No accounts. No noise.</p></div><div class="seal"><span>VALOR<br>DISCIPLINE<br>PRECISION</span></div></section>
-<section class="wrap" id="catalogue"><div class="controls"><input id="search" class="control" placeholder="Search the archive…" aria-label="Search"><select id="type" class="control"><option value="all">All systems</option><option value="strategy">Strategies</option><option value="indicator">Indicators</option></select><select id="lang" class="control"><option value="all">All languages</option><option>MQL5</option><option>MQL4</option><option>Pine Script</option><option>Python</option><option>Rust</option></select><div class="count" id="count"></div></div>
-<div class="catalogue"><div class="section-head"><div><div class="eyebrow">The Archive</div><h2>Systems & instruments</h2></div><p>12 strategies · 10 indicators</p></div><div class="grid" id="grid"></div></div></section>
-</main>
-<div class="drawer" id="drawer"><div class="sheet"><button class="close" onclick="closeDrawer()">×</button><div id="detail"></div></div></div>
-<footer><div class="wrap footer"><div><strong>MOMO</strong><div class="small">A catalogue of systematic trading research and implementations.</div></div><div class="small">MQL5 · MQL4 · PINE · PYTHON · RUST</div></div></footer>
-<script>
-const langs=["MQL5","MQL4","Pine Script","Python","Rust"];
-const strategies=[
-["Opening Range Breakout","Tracks a defined London or New York opening range. A confirmed close beyond the range triggers directional entry.","15/30m window · breakout close","SL opposite extreme or midpoint"],
-["Supply & Demand Zone Rejection","Detects base zones preceding sharp momentum extensions and seeks confirmed pullbacks into unmitigated zones.","Zone detection · confirmation candle","Zone invalidation / structural target"],
-["Moving Average Cross + Trend Filter","Fast EMA crosses the slow EMA while a macro trend condition such as 200 SMA slope or ADX validates direction.","EMA 9/20 vs 50/200 · ADX option","Trend-filtered crossover"],
-["Bollinger Band Mean Reversion","Fades closes outside the outer Bollinger Band when RSI or Stochastic confirms an overextended state.","BB(20,2) · RSI/Stoch filter","Return toward SMA20"],
-["Donchian Channel Breakout","Turtle-style breakout using the highest high and lowest low over a rolling N-bar channel.","20-bar default","Opposite shorter channel / exit rule"],
-["MACD Zero-Line Momentum","Requires a MACD zero-line crossover plus increasing histogram momentum for at least two bars.","MACD · histogram acceleration","Momentum invalidation / structural exit"],
-["Fibonacci Retracement Pullback","Maps a recent swing high-low and looks for reversal inside the 61.8–78.6% retracement area.","61.8/78.6% zone","Prior structural extreme"],
-["SuperTrend MTF Trend Following","ATR-backed SuperTrend flips only on confirmed closes, with higher-timeframe trend context available.","ATR SuperTrend · MTF","Dynamic SuperTrend stop"],
-["VWAP Session Reversion","Uses session VWAP and standard-deviation bands to fade extreme deviations back toward fair value.","VWAP · ±1/±2σ","VWAP mean reversion"],
-["BOS & ChoCH Structure Engine","Tracks confirmed swing pivots. Minor breaks classify continuation while major counter-trend breaks flag structural reversal.","Swing pivots · BOS · ChoCH","Structural invalidation / liquidity"],
-["RSI Divergence Reversal","Identifies price higher-high / RSI lower-high or inverse divergence, then waits for a countertrend swing break.","RSI divergence · swing break","Countertrend structure"],
-["ATR Breakout Volatility Expansion","Detects compressed ranges relative to rolling ATR and places conditional breakout orders beyond the compression bar.","ATR compression threshold","Opposite side / volatility stop"]
-];
-const indicators=[
-["Adaptive RSI-EMA (ARESI)","Smooths RSI through an EMA whose effective period scales with normalized ATR, filtering chop while adapting to expansion.","RSI · adaptive EMA · ATR normalization"],
-["Volumetric ATR Envelope (V-ATRE)","Multiplies ATR by a volume-intensity factor to create adaptive support and resistance envelopes.","ATR · tick/real volume"],
-["Stochastic Momentum Z-Score (SMZ)","Normalizes stochastic momentum into rolling Z-scores to express deviation from its recent distribution.","Stochastic · rolling Z-score"],
-["MACD-SuperTrend Hybrid Filter (MSTF)","Requires MACD histogram acceleration and a volatility SuperTrend regime to align before producing a signal.","MACD histogram · SuperTrend"],
-["Multi-Timeframe Hull Trend Ribbon (MTF-HR)","Four HMA lengths with recursive timeframe scaling provide a non-repainting short/intermediate/long trend ribbon.","HMA · MTF recursion"],
-["Bollinger-RSI Momentum Squeeze (BRMS)","Combines BB width, Keltner/ATR containment and RSI proximity to 50 for a quantified squeeze warning.","Bollinger · Keltner · RSI"],
-["Volume-Weighted ATR Stop (VW-ATRS)","Adjusts ATR trailing distance using volume accumulation: tighter in heavy participation and wider in thin liquidity.","ATR stop · volume weighting"],
-["Fractal-Chande Momentum Oscillator (F-CMO)","Validates CMO momentum against confirmed Bill Williams fractal turns to reduce unconfirmed reversals.","Fractals · CMO"],
-["Parabolic SAR Volume Intensity Index (PSAR-VII)","Scales PSAR acceleration using relative volume spikes to make the stop responsive to participation.","PSAR · relative volume"],
-["Composite Trend Exhaustion Index (CTEI)","Combines ROC, normalized CCI and distance from 200 EMA into a -100 to +100 exhaustion oscillator.","ROC · CCI · EMA200"]
-];
-const systems=[...strategies.map((x,i)=>({id:i+1,name:x[0],type:"strategy",desc:x[1],logic:x[2],exit:x[3]})),...indicators.map((x,i)=>({id:i+13,name:x[0],type:"indicator",desc:x[1],logic:x[2],exit:"Signal / research instrument"}))];
-const sourceRefs=[{name:"GoldViper",lang:"Python",repo:"hummzer/GoldViper",note:"Existing private XAUUSD signal-generation codebase."},{name:"VipsGold",lang:"Python",repo:"hummzer/VipsGold",note:"Existing private XAUUSD multi-engine signal framework."},{name:"MQL5 archive",lang:"MQL5",repo:"hummzer/MQL5",note:"Existing private MT5 Experts and Indicators archive."}];
-function render(){
- const q=document.querySelector("#search").value.toLowerCase(), t=document.querySelector("#type").value, l=document.querySelector("#lang").value;
- const filtered=systems.filter(s=>(t==="all"||s.type===t)&&(!q||[s.name,s.desc,s.logic].join(" ").toLowerCase().includes(q)));
- document.querySelector("#count").textContent=filtered.length+" / 22 shown";
- document.querySelector("#grid").innerHTML=filtered.map(s=>'<article class="card" onclick="openDrawer('+s.id+')"><span class="tag '+(s.type==="strategy"?"red":"")+'">'+(s.type==="strategy"?"STRATEGY":"INDICATOR")+'</span><span class="num">'+String(s.id).padStart(2,"0")+'</span><h3>'+s.name+'</h3><p>'+s.desc+'</p><div class="meta">'+langs.map(x=>'<span class="pill">'+x+'</span>').join("")+'</div><div class="card-foot"><span class="price">FROM $—</span><span class="status">Specification / Build</span></div></article>').join("");
-}
-function openDrawer(id){
- const s=systems.find(x=>x.id===id); document.querySelector("#drawer").classList.add("open");
- document.querySelector("#detail").innerHTML='<div class="eyebrow">'+(s.type==="strategy"?"STRATEGY":"INDICATOR")+' · '+String(s.id).padStart(2,"0")+'</div><h2>'+s.name+'</h2><p style="color:#999">'+s.desc+'</p><div class="rule"></div><div class="detail"><div><b>Languages</b><span>All five planned</span></div><div><b>Logic</b><span>'+s.logic+'</span></div><div><b>Exit / use</b><span>'+s.exit+'</span></div><div><b>Repainting</b><span>Closed-bar design</span></div><div><b>Pairs</b><span>Instrument-specific configuration</span></div><div><b>Price</b><span>Configured before release</span></div></div><div class="rule"></div><div class="notice">Momo deliberately shows no fabricated backtest statistics. Performance fields will be populated only from verified tests. Source code remains in private repositories rather than being exposed in this public static frontend.</div>';
-}
-function closeDrawer(){document.querySelector("#drawer").classList.remove("open")}
-document.querySelector("#search").addEventListener("input",render);document.querySelector("#type").addEventListener("change",render);document.querySelector("#lang").addEventListener("change",render);document.querySelector("#drawer").addEventListener("click",e=>{if(e.target.id==="drawer")closeDrawer()});render();
-</script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#070707" />
+    <meta name="description" content="Momo — systematic trading strategies and indicators across MQL5, MQL4, Pine Script, Python and Rust." />
+    <title>Momo — Trading Systems Archive</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
 </html>
