@@ -7,6 +7,15 @@ const type = ref('all')
 const language = ref('all')
 const selected = ref(null)
 
+const WHATSAPP_NUMBER = '254716475923'
+function whatsappLink(systemName) {
+  const text = systemName ? 'Hi, I\'d like to order a custom build of "' + systemName + '" from Momo.' : "Hi, I'd like to talk about a custom EA/indicator build."
+  return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text)
+}
+const metricFields = [
+['History Quality','historyQuality'],['Bars','bars'],['Ticks','ticks'],['Symbols','symbols'],['Initial Deposit','initialDeposit'],['Withdrawal','withdrawal'],['Net Profit','netProfit'],['Gross Profit / Loss','grossProfitLoss'],['Balance Drawdown','balanceDrawdown'],['Equity Drawdown','equityDrawdown'],['Profit Factor','profitFactor'],['Recovery Factor','recoveryFactor'],['Expected Payoff','expectedPayoff'],['Sharpe Ratio','sharpe'],['AHPR / GHPR','ahprGhpr'],['LR Correlation','lrCorrelation'],['LR Standard Error','lrStdError'],['Margin Level','marginLevel'],['Z-Score','zScore'],['OnTester','onTester'],['Total Trades / Deals','totalTrades'],['Long / Short Stats','longShort'],['Profit/Loss Trade Stats','plTradeStats'],['Largest / Average Trades','largestAvgTrades'],['Consecutive Wins / Losses','consecutiveWinsLosses'],['Holding Time','holdingTime'],['MFE/MAE Correlation','mfeMae']
+]
+
 const strategies = [
   ['Opening Range Breakout','Tracks a designated London or New York opening range. A confirmed close beyond the range triggers directional entry.','15/30m window · breakout close','SL opposite extreme or midpoint'],
   ['Supply & Demand Zone Rejection','Detects base zones before sharp momentum extensions and seeks confirmed pullbacks into unmitigated zones.','Zone detection · confirmation candle','Zone invalidation / structural target'],
@@ -36,8 +45,8 @@ const indicators = [
 ]
 
 const systems = [
-  ...strategies.map((x,i) => ({ id:i+1, name:x[0], type:'strategy', description:x[1], logic:x[2], exit:x[3] })),
-  ...indicators.map((x,i) => ({ id:i+13, name:x[0], type:'indicator', description:x[1], logic:x[2], exit:'Signal / research instrument' }))
+  ...strategies.map((x,i) => ({ id:i+1, name:x[0], type:'strategy', description:x[1], logic:x[2], exit:x[3], priceFrom:89, metrics:null, videoUrl:null })),
+  ...indicators.map((x,i) => ({ id:i+13, name:x[0], type:'indicator', description:x[1], logic:x[2], exit:'Signal / research instrument', priceFrom:39, metrics:null, videoUrl:null }))
 ]
 
 const filtered = computed(() => systems.filter(s => {
@@ -55,20 +64,12 @@ function close() { selected.value = null }
     <header class="nav">
       <div class="nav-inner">
         <div class="brand">MOMO<span></span></div>
-        <nav><a href="#archive">Archive</a><a href="#archive">Strategies</a><a href="#archive">Indicators</a></nav>
+        <nav><a href="#archive" @click.prevent="setTypeFilter('all')">Archive</a><a href="#archive" @click.prevent="setTypeFilter('strategy')">Strategies</a><a href="#archive" @click.prevent="setTypeFilter('indicator')">Indicators</a></nav>
       </div>
     </header>
 
     <main>
-      <section class="hero">
-        <div class="hero-inner">
-          <div class="eyebrow">PRIVATE TRADING SYSTEMS ARCHIVE · 2026</div>
-          <h1>BUILD.<br>TEST.<br><em>DEPLOY.</em></h1>
-          <p>Momo is the catalogue for systematic trading work across MQL5, MQL4, Pine Script, Python and Rust. Twenty-two core systems. Five implementation languages. No accounts. No noise.</p>
-          <a class="hero-link" href="#archive">ENTER THE ARCHIVE <span>↓</span></a>
-        </div>
-        <div class="seal"><span>VALOR<br>DISCIPLINE<br>PRECISION</span></div>
-      </section>
+      <section class="intro"><div class="intro-inner"><div class="eyebrow">TRADING SYSTEMS ARCHIVE</div><h1>Systematic trading work, built to spec.</h1><p>22 catalogued systems across MQL5, MQL4, Pine Script, Python and Rust. Every build ships with a full verified backtest report before delivery — no fabricated performance claims.</p><div class="intro-actions"><a class="btn-primary" href="#archive">Browse the archive</a><a class="btn-ghost" :href="whatsappLink()" target="_blank" rel="noopener">Request a custom build</a></div></div></section>
 
       <section id="archive" class="archive">
         <div class="filters">
@@ -92,7 +93,7 @@ function close() { selected.value = null }
             <h3>{{ system.name }}</h3>
             <p>{{ system.description }}</p>
             <div class="pills"><span v-for="lang in languages" :key="lang">{{ lang }}</span></div>
-            <div class="card-foot"><span class="price">FROM $—</span><span>SPECIFICATION / BUILD</span></div>
+            <div class="card-foot"><span class="price">FROM $</span>{{ system.priceFrom }}<span>SPECIFICATION / BUILD</span></div>
           </article>
         </div>
 
@@ -100,24 +101,7 @@ function close() { selected.value = null }
       </section>
     </main>
 
-    <div v-if="selected" class="modal" @click.self="close">
-      <aside class="drawer">
-        <button class="close" @click="close">×</button>
-        <div class="eyebrow">{{ selected.type }} · {{ String(selected.id).padStart(2,'0') }}</div>
-        <h2>{{ selected.name }}</h2>
-        <p class="drawer-copy">{{ selected.description }}</p>
-        <div class="rule"></div>
-        <div class="details">
-          <div><b>Languages</b><span>All five planned</span></div>
-          <div><b>Logic</b><span>{{ selected.logic }}</span></div>
-          <div><b>Exit / use</b><span>{{ selected.exit }}</span></div>
-          <div><b>Repainting</b><span>Closed-bar design</span></div>
-          <div><b>Pairs</b><span>Instrument-specific configuration</span></div>
-          <div><b>Price</b><span>Configured before release</span></div>
-        </div>
-        <div class="notice">No fabricated performance statistics. Verified backtest results can be added to each system as implementations are completed.</div>
-      </aside>
-    </div>
+    <div v-if="selected" class="modal" @click.self="close"><aside class="drawer"><button class="close" @click="close">×</button><div class="eyebrow">{{ selected.type }} · {{ String(selected.id).padStart(2,'0') }}</div><h2>{{ selected.name }}</h2><p class="drawer-copy">{{ selected.description }}</p><div class="rule"></div><div class="details"><div><b>Languages</b><span>All five planned</span></div><div><b>Logic</b><span>{{ selected.logic }}</span></div><div><b>Exit / use</b><span>{{ selected.exit }}</span></div><div><b>Repainting</b><span>Closed-bar design</span></div><div><b>Pairs</b><span>Instrument-specific configuration</span></div><div><b>Price</b><span>From $</span>{{ selected.priceFrom }}<span> · final quote after spec review</span></div></div><div class="rule"></div><div class="backtest-head"><div class="eyebrow">MT5 BACKTEST REPORT</div><h3>Performance metrics</h3></div><div v-if="selected.videoUrl" class="video-area"><video :src="selected.videoUrl" controls></video></div><div v-else class="video-area empty-video">Backtest walkthrough video will appear here once recorded.</div><div v-if="selected.metrics" class="details metrics-grid"><div v-for="[label,key] in metricFields" :key="key"><b>{{ label }}</b><span>{{ selected.metrics[key] ?? '—' }}</span></div></div><div v-else class="notice">No verified backtest yet for this system. Every metric — History Quality through MFE/MAE correlation — populates here automatically once a real MT5 Strategy Tester report is attached. No fabricated performance statistics.</div><a class="btn-primary full" :href="whatsappLink(selected.name)" target="_blank" rel="noopener">Order this build on WhatsApp</a></aside></div>
 
     <footer><div class="footer-inner"><strong>MOMO</strong><span>MQL5 · MQL4 · PINE · PYTHON · RUST</span></div></footer>
   </div>
