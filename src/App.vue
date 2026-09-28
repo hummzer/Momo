@@ -52,8 +52,10 @@ const systems = [
 const filtered = computed(() => systems.filter(s => {
   const q = search.value.trim().toLowerCase()
   return (type.value === 'all' || s.type === type.value) &&
+    (language.value === 'all' || languages.includes(language.value)) &&
     (!q || [s.name,s.description,s.logic].join(' ').toLowerCase().includes(q))
 }))
+function setTypeFilter(t) { type.value=t; document.getElementById('archive')?.scrollIntoView({behavior:'smooth'}) }
 
 function open(system) { selected.value = system }
 function close() { selected.value = null }
@@ -75,7 +77,7 @@ function close() { selected.value = null }
         <div class="filters">
           <input v-model="search" placeholder="Search the archive…" aria-label="Search archive">
           <select v-model="type"><option value="all">All systems</option><option value="strategy">Strategies</option><option value="indicator">Indicators</option></select>
-          <select v-model="language"><option value="all">All languages</option><option v-for="item in languages" :key="item">{{ item }}</option></select>
+          <select v-model="language"><option value="all">All languages</option><option v-for="item in languages" :key="item" :value="item">{{ item }}</option></select>
           <div class="count">{{ filtered.length }} / 22 SHOWN</div>
         </div>
 
@@ -93,7 +95,7 @@ function close() { selected.value = null }
             <h3>{{ system.name }}</h3>
             <p>{{ system.description }}</p>
             <div class="pills"><span v-for="lang in languages" :key="lang">{{ lang }}</span></div>
-            <div class="card-foot"><span class="price">FROM $</span>{{ system.priceFrom }}<span>SPECIFICATION / BUILD</span></div>
+            <div class="card-foot"><span class="price">FROM ${{ system.priceFrom }}</span><span>SPECIFICATION / BUILD</span></div>
           </article>
         </div>
 
@@ -101,7 +103,7 @@ function close() { selected.value = null }
       </section>
     </main>
 
-    <div v-if="selected" class="modal" @click.self="close"><aside class="drawer"><button class="close" @click="close">×</button><div class="eyebrow">{{ selected.type }} · {{ String(selected.id).padStart(2,'0') }}</div><h2>{{ selected.name }}</h2><p class="drawer-copy">{{ selected.description }}</p><div class="rule"></div><div class="details"><div><b>Languages</b><span>All five planned</span></div><div><b>Logic</b><span>{{ selected.logic }}</span></div><div><b>Exit / use</b><span>{{ selected.exit }}</span></div><div><b>Repainting</b><span>Closed-bar design</span></div><div><b>Pairs</b><span>Instrument-specific configuration</span></div><div><b>Price</b><span>From $</span>{{ selected.priceFrom }}<span> · final quote after spec review</span></div></div><div class="rule"></div><div class="backtest-head"><div class="eyebrow">MT5 BACKTEST REPORT</div><h3>Performance metrics</h3></div><div v-if="selected.videoUrl" class="video-area"><video :src="selected.videoUrl" controls></video></div><div v-else class="video-area empty-video">Backtest walkthrough video will appear here once recorded.</div><div v-if="selected.metrics" class="details metrics-grid"><div v-for="[label,key] in metricFields" :key="key"><b>{{ label }}</b><span>{{ selected.metrics[key] ?? '—' }}</span></div></div><div v-else class="notice">No verified backtest yet for this system. Every metric — History Quality through MFE/MAE correlation — populates here automatically once a real MT5 Strategy Tester report is attached. No fabricated performance statistics.</div><a class="btn-primary full" :href="whatsappLink(selected.name)" target="_blank" rel="noopener">Order this build on WhatsApp</a></aside></div>
+    <div v-if="selected" class="modal" @click.self="close"><aside class="drawer"><button class="close" @click="close">×</button><div class="eyebrow">{{ selected.type }} · {{ String(selected.id).padStart(2,'0') }}</div><h2>{{ selected.name }}</h2><p class="drawer-copy">{{ selected.description }}</p><div class="rule"></div><div class="details"><div><b>Languages</b><span>All five planned</span></div><div><b>Logic</b><span>{{ selected.logic }}</span></div><div><b>Exit / use</b><span>{{ selected.exit }}</span></div><div><b>Repainting</b><span>Closed-bar design</span></div><div><b>Pairs</b><span>Instrument-specific configuration</span></div><div><b>Price</b><span>From ${{ selected.priceFrom }} · final quote after spec review</span></div></div><div class="rule"></div><div class="backtest-head"><div class="eyebrow">MT5 BACKTEST REPORT</div><h3>Performance metrics</h3></div><div v-if="selected.videoUrl" class="video-area"><video :src="selected.videoUrl" controls></video></div><div v-else class="video-area empty-video">Backtest walkthrough video will appear here once recorded.</div><div v-if="selected.metrics" class="details metrics-grid"><div v-for="[label,key] in metricFields" :key="key"><b>{{ label }}</b><span>{{ selected.metrics[key] ?? '—' }}</span></div></div><div v-else class="notice">No verified backtest yet for this system. Every metric — History Quality through MFE/MAE correlation — populates here automatically once a real MT5 Strategy Tester report is attached. No fabricated performance statistics.</div><a class="btn-primary full" :href="whatsappLink(selected.name)" target="_blank" rel="noopener">Order this build on WhatsApp</a></aside></div>
 
     <footer><div class="footer-inner"><strong>MOMO</strong><span>MQL5 · MQL4 · PINE · PYTHON · RUST</span></div></footer>
   </div>
